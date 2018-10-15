@@ -17,6 +17,10 @@ function frequencyToNote(f) {
     return Math.round(12 * Math.log2(f / middleA) + 57);
 }
 
+function noteToOctave(note) {
+    return Math.floor((note + 8) / 12);
+}
+
 class AudioOutput {
 
     constructor() {
