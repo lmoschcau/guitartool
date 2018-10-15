@@ -44,7 +44,7 @@ class SoundGenerator {
     }
 
     setFrequency(f) {
-       this.output.frequency(f); 
+        this.output.frequency.setValueAtTime(f, output.context.currentTime); 
     }
 }
 
@@ -53,3 +53,4 @@ var output = new AudioOutput();
 var input = new SoundGenerator(output);
 
 output.setInput(input);
+input.setFrequency(noteToFrequency(40));
