@@ -6,6 +6,28 @@ if (!navigator.getUserMedia) {
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
+class Mode {
+
+    constructor(intervals) {
+        
+        this.intervals = intervals;
+
+    }
+
+    getInterval(note) {
+        return this.intervals[note - 1];
+    }
+
+    getFullInterval(note) {
+        var interval = 0;
+        for (let i = 0; i <= note; i++) {
+            interval += this.intervals[i % this.intervals.length];
+        }
+        return interval;
+    }
+
+}
+
 var config = {
     constants: {
         middleA: 440,
@@ -18,6 +40,15 @@ var config = {
             ['e', 8],
             ['f', 9],
             ['g', 11]
+        ],
+        modes: [
+            new Mode([2, 2, 1, 2, 2, 2, 1]), // Inionian (I)
+            new Mode([2, 1, 2, 2, 2, 1, 2]), // Dorian (II)
+            new Mode([1, 2, 2, 2, 1, 2, 2]), // Phrygian (III)
+            new Mode([2, 2, 2, 1, 2, 2, 1]), // Lydian (IV)
+            new Mode([2, 2, 1, 2, 2, 1, 2]), // Myxolodian (V)
+            new Mode([2, 1, 2, 2, 1, 2, 2]), // Aeolian (VI)
+            new Mode([1, 2, 2, 1, 2, 2, 2]), // Locrian (VII)
         ]
     }
 } 
@@ -109,7 +140,7 @@ class Note {
 
 class Scale {
 
-    constructor(root) {
+    constructor(root, length) {
 
         if (root instanceof Note) {
             this.root = root;
@@ -118,6 +149,7 @@ class Scale {
             throw "Root is not a Note!"
         }
 
+        this.length = length;
         this.notes = [this.root];
     }
 
@@ -130,6 +162,28 @@ class Scale {
     }
 }
 
+    class StandardScale extends Scale {
+
+        constructor(root, length, mode) {
+
+            super(root, length);
+            if (mode instanceof Mode) {
+                this.mode = mode;
+            }
+            else {
+                throw "Mode is not a Mode!"
+            }
+
+            for (let i = 1; i < this.length; i++) {
+                var note = new Note('key', this.root.getKey() + mode.getFullInterval(i));
+                this.notes.push(note);
+            }
+
+        }
+
+    }
+
+// Audio and Sound code
 class AudioOutput {
 
     constructor() {
