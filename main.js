@@ -6,6 +6,25 @@ if (!navigator.getUserMedia) {
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
+var middleA = 440;
+
+// Musical helper-functions
+function noteToFrequency(note) {
+    return middleA * (2 ** (1 / 12)) ** (note - 57);
+}
+
+function frequencyToNote(f) {
+    return Math.round(12 * Math.log2(f / middleA) + 57);
+}
+
+function noteToOctave(note) {
+    return Math.floor((note + 8) / 12);
+}
+
+function noteToKey(note) {
+    return (note - 4) % 12 + 1;
+}
+
 class AudioOutput {
 
     constructor() {
@@ -25,7 +44,7 @@ class SoundGenerator {
     }
 
     setFrequency(f) {
-       this.output.frequency(f); 
+        this.output.frequency.setValueAtTime(f, output.context.currentTime); 
     }
 }
 
@@ -34,3 +53,4 @@ var output = new AudioOutput();
 var input = new SoundGenerator(output);
 
 output.setInput(input);
+input.setFrequency(noteToFrequency(40));
