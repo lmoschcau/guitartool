@@ -6,6 +6,13 @@ if (!navigator.getUserMedia) {
 
 window.AudioContext = window.AudioContext || window.webkitAudioContext;
 
+var middleA = 440;
+
+// Musical helper-functions
+function noteToFrequency(note) {
+    return middleA * (2 ** (1 / 12)) ** (note - 57);
+}
+
 class AudioOutput {
 
     constructor() {
