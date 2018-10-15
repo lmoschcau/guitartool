@@ -21,6 +21,10 @@ function noteToOctave(note) {
     return Math.floor((note + 8) / 12);
 }
 
+function noteToKey(note) {
+    return (note - 4) % 12 + 1;
+}
+
 class AudioOutput {
 
     constructor() {
