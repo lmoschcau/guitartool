@@ -9,16 +9,16 @@ window.AudioContext = window.AudioContext || window.webkitAudioContext;
 var config = {
     constants: {
         middleA: 440,
-        names: {
-            'a': 1,
-            'b': 3,
-            'h': 3,
-            'c': 4,
-            'd': 6,
-            'e': 8,
-            'f': 9,
-            'g': 11
-        }
+        names: [
+            ['a', 1],
+            ['b', 3],
+            ['h', 3],
+            ['c', 4],
+            ['d', 6],
+            ['e', 8],
+            ['f', 9],
+            ['g', 11]
+        ]
     }
 } 
 
@@ -40,7 +40,12 @@ class Note {
         }
         if (mode == "name") {
             var exp = /([a-hA-H])([#b]?)(\d)/.exec(note);
-            var key = 12 * exp[3] + config.constants.names[exp[1].toLowerCase()];
+            var key = 12 * exp[3]
+            config.constants.names.forEach(name => {
+                if (name[0] == exp[1].toLowerCase()) {
+                    key += name[1];
+                }
+            });
 
             if (exp[2] == "#") {
                 key++;
@@ -67,15 +72,38 @@ class Note {
     }
 
     getNote() {
-        return (note - 4) % 12 + 1;
+        return (this.key) % 12;
     }
 
     getFrequency() {
-        return middleA * (2 ** (1 / 12)) ** (note - 57);
+        return middleA * (2 ** (1 / 12)) ** (this.key - 57);
     }
 
     getExactFrequency() {
         return this.getFrequency() + this.offset;
+    }
+
+    getNames() {
+        var notes = [];
+        config.constants.names.forEach(name => {
+            if (name[1] == this.getNote()) {
+                notes.push(name[0]);
+            }
+            else if (name[1] - 1 == this.getNote()) {
+                notes.push(name[0] + "b");
+            }
+            else if (name[1] + 1 == this.getNote()) {
+                notes.push(name[0] + "#");
+            }
+        });
+        for (let i = 0; i < notes.length; i++) {
+            if (notes[i] == "hb") {
+                notes[i] = "b";
+            }
+            notes[i] += this.getOctave();
+        }
+
+        return notes;
     }
 
 }
