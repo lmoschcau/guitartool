@@ -105,7 +105,29 @@ class Note {
 
         return notes;
     }
+}
 
+class Scale {
+
+    constructor(root) {
+
+        if (root instanceof Note) {
+            this.root = root;
+        }
+        else {
+            throw "Root is not a Note!"
+        }
+
+        this.notes = [this.root];
+    }
+
+    getRoot() {
+        return this.root;
+    }
+
+    getNotes() {
+        return this.notes;
+    }
 }
 
 class AudioOutput {
