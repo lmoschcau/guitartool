@@ -103,11 +103,11 @@ class Note {
     }
 
     getNote() {
-        return (this.key) % 12;
+        return (this.key + 3) % 12 + 1;
     }
 
     getFrequency() {
-        return middleA * (2 ** (1 / 12)) ** (this.key - 57);
+        return config.constants.middleA * (2 ** (1 / 12)) ** (this.key - 57);
     }
 
     getExactFrequency() {
