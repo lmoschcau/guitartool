@@ -71,7 +71,7 @@ class Note {
         }
         if (mode == "name") {
             var exp = /([a-hA-H])([#b]?)(\d)/.exec(note);
-            var key = 12 * exp[3]
+            var key = 12 * exp[3] - 4;
             config.constants.names.forEach(name => {
                 if (name[0] == exp[1].toLowerCase()) {
                     key += name[1];
@@ -99,7 +99,7 @@ class Note {
     }
 
     getOctave() {
-        return Math.floor((this.key + 8) / 12);
+        return Math.floor((this.key + 3) / 12);
     }
 
     getNote() {
@@ -146,7 +146,7 @@ class Scale {
             this.root = root;
         }
         else {
-            throw "Root is not a Note!"
+            throw "Root is not a Note!";
         }
 
         this.length = length;
@@ -171,7 +171,7 @@ class Scale {
                 this.mode = mode;
             }
             else {
-                throw "Mode is not a Mode!"
+                throw "Mode is not a Mode!";
             }
 
             for (let i = 1; i < this.length; i++) {
